@@ -1,13 +1,13 @@
 <?php
 /**
  * functions_lookups.php
- * Lookup Functions for various Zen Cart activities such as countries, prices, products, product types, etc
+ * Lookup Functions for various core activities related to countries, prices, products, product types, etc
  *
  * @package functions
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: functions_lookups.php for Multisite 1.2 2014-08-08 10:13:43Z webchills $
+ * @version $Id: functions_lookups.php for Multisite 1.3 2016-03-12 22:13:43Z webchills $
  */
 
 
@@ -22,11 +22,15 @@
     $countries_array = array();
     if (zen_not_null($countries_id)) {
       $countries_array['countries_name'] = '';
-      $countries = "select countries_name, countries_iso_code_2, countries_iso_code_3
-                    from " . TABLE_COUNTRIES . "
-                    where countries_id = '" . (int)$countries_id . "'";
-      if ($activeOnly) $countries .= " and status != 0 ";
-      $countries .= " order by countries_name";
+// BOF Mehrsprachige Landernamen 1 of 2
+      $countries = "SELECT con.countries_name, co.countries_iso_code_2, co.countries_iso_code_3
+                    FROM " . TABLE_COUNTRIES . " co, " . TABLE_COUNTRIES_NAME . " con
+                    WHERE co.countries_id = '" . (int)$countries_id . "'
+                    AND con.countries_id = co.countries_id
+                    AND con.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+      if ($activeOnly) $countries .= " AND co.status != 0 ";
+      $countries .= " ORDER BY con.countries_name";
+// EOF Mehrsprachige Landernamen 1 of 2
       $countries_values = $db->Execute($countries);
 
       if ($with_iso_codes == true) {
@@ -41,10 +45,14 @@
         if (!$countries_values->EOF) $countries_array = array('countries_name' => $countries_values->fields['countries_name']);
       }
     } else {
-      $countries = "select countries_id, countries_name
-                    from " . TABLE_COUNTRIES . " ";
-      if ($activeOnly) $countries .= " where status != 0 ";
-      $countries .= " order by countries_name";
+// BOF Mehrsprachige Landernamen 2 of 2
+      $countries = "SELECT co.countries_id, con.countries_name
+                    FROM " . TABLE_COUNTRIES . " co, " . TABLE_COUNTRIES_NAME . " con";
+      if ($activeOnly) $countries .= " WHERE co.status != 0 ";
+      $countries .= " AND con.countries_id = co.countries_id";
+      $countries .= " AND con.language_id = '" . (int)$_SESSION['languages_id'] . "'";
+      $countries .= " ORDER BY con.countries_name";
+// EOF Mehrsprachige Landernamen 2 of 2
       $countries_values = $db->Execute($countries);
 
       while (!$countries_values->EOF) {
@@ -155,9 +163,9 @@
 
 
 /**
- * Return a product's stock count.
+ * Return a product's stock-on-hand
  *
- * @param int The product id of the product who's stock we want
+ * @param int $products_id The product id of the product whose stock we want
 */
   function zen_get_products_stock($products_id) {
     global $db;
@@ -173,23 +181,15 @@
 
 /**
  * Check if the required stock is available.
- *
  * If insufficent stock is available return an out of stock message
  *
- * @param int The product id of the product whos's stock is to be checked
- * @param int Is this amount of stock available
- *
- * @TODO naughty html in a function
+ * @param int $products_id        The product id of the product whose stock is to be checked
+ * @param int $products_quantity  Quantity to compare against
 */
   function zen_check_stock($products_id, $products_quantity) {
     $stock_left = zen_get_products_stock($products_id) - $products_quantity;
-    $out_of_stock = '';
 
-    if ($stock_left < 0) {
-      $out_of_stock = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
-    }
-
-    return $out_of_stock;
+    return ($stock_left < 0) ? '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>' : '';
   }
 
 /*
@@ -251,6 +251,48 @@
     }
   }
 
+/*
+ *  Check if option name is not expected to have an option value (ie. text field, or File upload field)
+ */
+  function zen_option_name_base_expects_no_values($option_name_id) {
+    global $db, $zco_notifier;
+
+    $option_name_no_value = true;
+    if (!is_array($option_name_id)) {
+      $option_name_id = array($option_name_id);
+    }
+    
+    $sql = "SELECT products_options_type FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE products_options_id :option_name_id:";
+    if (sizeof($option_name_id) > 1 ) {
+      $sql2 = 'in (';
+      foreach($option_name_id as $option_id) {
+        $sql2 .= ':option_id:,';
+        $sql2 = $db->bindVars($sql2, ':option_id:', $option_id, 'integer');
+      }
+      $sql2 = rtrim($sql2, ','); // Need to remove the final comma off of the above.
+      $sql2 = ')';
+    } else {
+      $sql2 = ' = :option_id:';
+      $sql2 = $db->bindVars($sql2, ':option_id:', $option_name_id[0], 'integer');
+    }
+      
+    $sql = $db->bindVars($sql, ':option_name_id:', $sql2, 'noquotestring');
+    
+    $sql_result = $db->Execute($sql);
+    
+    foreach($sql_result as $opt_type) {
+
+      $test_var = true; // Set to false in observer if the name is not supposed to have a value associated
+      $zco_notifier->notify('FUNCTIONS_LOOKUPS_OPTION_NAME_NO_VALUES_OPT_TYPE', $opt_type, $test_var);
+
+      if ($test_var && $opt_type['products_options_type'] != PRODUCTS_OPTIONS_TYPE_TEXT && $opt_type['products_options_type'] != PRODUCTS_OPTIONS_TYPE_FILE) {
+        $option_name_no_value = false;
+        break;
+      }
+    }
+    
+    return $option_name_no_value;
+  }
 /*
  *  Check if product has attributes values
  */
@@ -715,7 +757,9 @@
   function zen_run_normal() {
     $zc_run = false;
     switch (true) {
-      case (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])):
+      // case (strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])):
+      // changed see https://www.zen-cart.com/showthread.php?214518-myDEBUG-3-identical-files-yesterday
+      case (!empty ($_SERVER['REMOTE_ADDR']) && strstr(EXCLUDE_ADMIN_IP_FOR_MAINTENANCE, $_SERVER['REMOTE_ADDR'])):
       // down for maintenance not for ADMIN
         $zc_run = true;
         break;
@@ -867,25 +911,20 @@
 ////
 // check if Product is set to use downloads
 // does not validate download filename
-  function zen_has_product_attributes_downloads_status($products_id) {
-    global $db;
-    if (DOWNLOAD_ENABLED == 'true') {
-      $download_display_query_raw ="select pa.products_attributes_id, pad.products_attributes_filename
-                                    from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                                    where pa.products_id='" . (int)$products_id . "'
-                                      and pad.products_attributes_id= pa.products_attributes_id";
-
-      $download_display = $db->Execute($download_display_query_raw);
-      if ($download_display->RecordCount() != 0) {
-        $valid_downloads = false;
-      } else {
-        $valid_downloads = true;
-      }
-    } else {
-      $valid_downloads = false;
-    }
-    return $valid_downloads;
+function zen_has_product_attributes_downloads_status($products_id) {
+  if (!defined('DOWNLOAD_ENABLED') || DOWNLOAD_ENABLED != 'true') {
+    return false;
   }
+
+  $query = "select pad.products_attributes_id
+              from " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+              inner join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+              on pad.products_attributes_id = pa.products_attributes_id
+              where pa.products_id = " . (int) $products_id;
+
+  global $db;
+  return ($db->Execute($query)->RecordCount() > 0);
+}
 
 // build date range for new products
   function zen_get_new_date_range($time_limit = false) {
@@ -933,5 +972,3 @@
 
     return $new_range;
   }
-
-?>

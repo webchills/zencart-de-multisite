@@ -2,10 +2,10 @@
 /**
  * Multisite Tools
  *
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: multisite.php 2014-08-08 11:59:36Z webchills $
+ * @version $Id: multisite.php 2016-03-12 23:04:36Z webchills $
  */
  
   require('includes/application_top.php');

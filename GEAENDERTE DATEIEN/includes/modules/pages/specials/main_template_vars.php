@@ -3,22 +3,54 @@
  * Specials
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: main_template_vars.php for Multisite 1.2 2014-08-08 11:23:34Z webchills $
+ * @version $Id: main_template_vars.php for Multisite 1.3 2016-03-12 22:23:34Z webchills $
  */
 
 if (MAX_DISPLAY_SPECIAL_PRODUCTS > 0 ) {
-  $specials_query_raw = "SELECT p.products_id, p.products_image, pd.products_name,
-                          p.master_categories_id
+// Start Salesmaker to Specials //	
+	$disp_order_default = PRODUCT_ALL_LIST_SORT_DEFAULT;
+	require(DIR_WS_MODULES . zen_get_module_directory(FILENAME_LISTING_DISPLAY_ORDER));
+	$order_by = isset($order_by) ? $order_by : 'ORDER BY s.specials_date_added DESC';
+	$sale_categories = $db->Execute("SELECT sale_categories_all FROM " . TABLE_SALEMAKER_SALES . " WHERE sale_status = 1");
+
+if ($sale_categories->RecordCount() > 0){
+	$sale_categories_all = '';
+	while(!$sale_categories->EOF) {
+	  	$sale_categories_all .= substr($sale_categories->fields['sale_categories_all'], 0, -1); 
+		  $sale_categories->MoveNext();
+	}
+	$sale_categories_all = substr($sale_categories_all, 1); 
+
+        $specials_query_raw = "SELECT p.products_type, p.products_id, pd.products_name, p.products_image, p.products_price, p.products_tax_class_id,
+                                    p.products_date_added,  p.products_model, p.products_quantity, p.products_weight, p.product_is_call,
+                                    p.product_is_always_free_shipping, p.products_qty_box_status,
+                                    p.master_categories_id
+                         FROM " . TABLE_PRODUCTS . " p
+                         LEFT JOIN " . TABLE_SPECIALS . " s ON (s.products_id = p.products_id)
+                         LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd ON (pd.products_id = p.products_id)
+                         WHERE p.products_status = '1'
+                           AND ( (s.status = 1 AND p.products_id = s.products_id) OR (p.master_categories_id IN ($sale_categories_all)) )
+                           AND p.products_id = pd.products_id
+                           AND pd.language_id = :languagesID
+                         ".$extra.' '.$order_by;
+
+} else {
+  
+        $specials_query_raw = "SELECT p.products_type, p.products_id, pd.products_name, p.products_image, p.products_price, p.products_tax_class_id,
+                                    p.products_date_added,  p.products_model, p.products_quantity, p.products_weight, p.product_is_call,
+                                    p.product_is_always_free_shipping, p.products_qty_box_status,
+                                    p.master_categories_id
                          FROM (" . TABLE_PRODUCTS . " p
                          LEFT JOIN " . TABLE_SPECIALS . " s on p.products_id = s.products_id
                          LEFT JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd on p.products_id = pd.products_id )
                          WHERE p.products_id = s.products_id and p.products_id = pd.products_id and p.products_status = '1'
-                         AND s.status = 1
-                         AND pd.language_id = :languagesID
-                         ORDER BY s.specials_date_added DESC";
+                           AND s.status = 1
+                           AND pd.language_id = :languagesID
+                         ".$extra.' '.$order_by;
+}
 
   $specials_query_raw = $db->bindVars($specials_query_raw, ':languagesID', $_SESSION['languages_id'], 'integer');
 // bof Multi site

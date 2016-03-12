@@ -1,18 +1,18 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>Multisite/Multishop 1.2 für Zen-Cart 1.5.3 deutsch</title>
+<title>Multisite/Multishop 1.3 für Zen-Cart 1.5.5 deutsch</title>
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <meta http-equiv="content-language" content="de">
-<meta name="description" content="Multishop Modul für Zen Cart 1.5.3 deutsch">
+<meta name="description" content="Multishop Modul für Zen Cart deutsch">
 <link rel="stylesheet" type="text/css" href="includes/css/stylesheet.css">  
 <script type="text/javascript" src="includes/jscript/jscript_tabs.js"></script>
 </head>
 <body>
 <div id="wrapper">
 <div id="header">
-<h1>Multisite/Multishop 1.2 für Zen Cart 1.5.3 deutsch</h1>
+<h1>Multisite/Multishop 1.3 für Zen Cart 1.5.5 deutsch</h1>
 </div>
 
 <div id="slidetabsmenu" style="display: none;">
@@ -45,12 +45,12 @@
     <br>
   </p>
 <h3>Copyright,  Lizenz</h3>
-<p>Copyright dieser deutschen Anpassung/Anleitung für Zen Cart 1.5.3 deutsch<br>
-(c) 2014 webchills (<a href="http://www.webchills.at" target="_blank">www.webchills.at</a>)<br>
+<p>Copyright dieser deutschen Anpassung/Anleitung für Zen Cart 1.5.5 deutsch<br>
+(c) 2016 webchills (<a href="http://www.webchills.at" target="_blank">www.webchills.at</a>)<br>
 <br>
-Anpassung des Moduls Multisite von <a href="http://www.zen-cart.com/downloads.php?do=file&id=378">http://www.zen-cart.com/downloads.php?do=file&amp;id=378</a> an die deutsche Zen Cart Version 1.5.3</p>
+Anpassung des Moduls Multisite von <a href="http://www.zen-cart.com/downloads.php?do=file&id=378">http://www.zen-cart.com/downloads.php?do=file&amp;id=378</a> an die deutsche Zen Cart Version 1.5.5</p>
 <p> Portions Copyright (c) 2003 osCommerce<br>
-  Portions Copyright     (c) 2003-2013 Zen Cart</p>
+  Portions Copyright     (c) 2003-2016 Zen Cart</p>
 <p>This contribution is subject to version 2.0 of the GPL license available through the world-wide-web at the following url:<br>
   <a href="http://www.zen-cart-pro.at/license/2_0.txt">http://www.zen-cart-pro.at/license/2_0.txt</a></p>
 </div>
@@ -66,7 +66,7 @@ Anpassung des Moduls Multisite von <a href="http://www.zen-cart.com/downloads.ph
 <h2>Installation</h2>
 <h3>Voraussetzungen</h3>
   <br>
-  <p>Dieses Modul ist<strong> nur für Zen Cart 1.5.3 deutsch geeignet</strong> und ändert zahlreiche  sehr wichtige Corefiles.<br>
+  <p>Dieses Modul ist<strong> nur für Zen Cart 1.5.5 deutsch geeignet</strong> und ändert zahlreiche sehr wichtige Corefiles.<br>
     <strong>Es ist kein Modul, das Sie in 2 Minuten einfach hochladen können.</strong><br>
   <br>
     Für den Einbau dieses Moduls sollten Sie über folgende Werkzeuge verfügen:<br>
@@ -84,7 +84,7 @@ Anpassung des Moduls Multisite von <a href="http://www.zen-cart.com/downloads.ph
   <p><br>
   <strong>Empfehlung:</strong><br>
   <br>
-  Dieses Modul erst in einem Testsystem einbauen und dort   konfigurieren/testen und endgültig an die eigenen Wünsche anpassen.        Erst dann in einem Liveshop einsetzen! Sichern Sie unbedingt alle   Dateien Ihres Shops per FTP und sichern Sie die Datenbank mit phpMyAdmin   oder anderen geeigneten Tools!</p>
+  Dieses Modul erst in einem Testsystem einbauen und dort konfigurieren/testen und endgültig an die eigenen Wünsche anpassen.        Erst dann in einem Liveshop einsetzen! Sichern Sie unbedingt alle   Dateien Ihres Shops per FTP und sichern Sie die Datenbank mit phpMyAdmin   oder anderen geeigneten Tools!</p>
 <div id="warning"><b>WICHTIG</b><br>
 Vor dem Einbau dieser Änderungen:<br>
 BACKUP von Shop und Datenbank machen! <br>
@@ -92,7 +92,7 @@ Keine Haftung, Verwendung auf eigene Gefahr!<br>
 BACKUP gemacht? Ok, dann weiterlesen...
 </div>
 <p><b>Voraussetzung</b></p>
-<p>Sie haben Zen Cart 1.5.3 bereits installiert und einen funktionsfähigen Shop. Diese Anleitung beschreibt, wie Sie Ihren bestehenden Shop modifizieren, um Multisite zu verwenden.</p>
+<p>Sie haben Zen Cart 1.5.5 bereits installiert und einen funktionsfähigen Shop. Diese Anleitung beschreibt, wie Sie Ihren bestehenden Shop modifizieren, um Multisite zu verwenden.</p>
 <p><strong>Planung:</strong>
 </p>
 <p>Bevor Sie dieses Modul integrieren, legen Sie erst Ihre gewünschte Konfiguration fest. In diesem Beispiel wird von 2 Shops ausgegangen.<br>
@@ -129,7 +129,7 @@ BACKUP gemacht? Ok, dann weiterlesen...
   SITE_NAME ist dabei frei wählbar, geben Sie dem Shop einfach einen Namen, der für Sie Sinn macht. Dieser Name wird später intern in der Administration verwendet und sollte eher kurz sein und keine Leer- oder Sonderzeichen enthalten.
   <br>
   <br>
-Lassen Sie die Werte für Minify auf false, es ist besser Minify, das in Zen Cart 1.5.3 standardmäßig aktiv ist, für Multishop nicht zu verwenden, da sonst die Stylesheets nicht korrekt geladen werden:</p>
+Lassen Sie die Werte für Minify auf false, es ist besser Minify, das seit Zen Cart 1.5.3 standardmäßig aktiv ist, für Multishop nicht zu verwenden, da sonst die Stylesheets nicht korrekt geladen werden:</p>
 <p>define('MINIFY_STATUS_JS','false');<br>
   define('MINIFY_STATUS_CSS','false');<br>
   <br>
@@ -143,7 +143,7 @@ define('SITE_NAME','shop2');<br>
 define('HTTP_SERVER', 'http://shop2.meinedomain.de');<br>
 define('HTTPS_SERVER', 'https://shop2.meinedomain.de');<br>
 SITE_NAME ist dabei frei wählbar, geben Sie dem Shop einfach einen Namen, der für Sie Sinn macht. Dieser Name wird später intern in der Administration verwendet und sollte eher kurz sein und keine Leer- oder Sonderzeichen enthalten. </p>
-<p>Lassen Sie die Werte für Minify auf false, es ist besser Minify, das in Zen Cart 1.5.3 standardmäßig aktiv ist, für Multishop nicht zu verwenden, da sonst die Stylesheets nicht korrekt geladen werden:</p>
+<p>Lassen Sie die Werte für Minify auf false, es ist besser Minify, das seit Zen Cart 1.5.3 standardmäßig aktiv ist, für Multishop nicht zu verwenden, da sonst die Stylesheets nicht korrekt geladen werden:</p>
 <p>define('MINIFY_STATUS_JS','false');<br>
   define('MINIFY_STATUS_CSS','false');</p>
 <p>Speichern Sie die Datei nun so ab, dass Ihre echte Domain exakt so enthalten ist, also wenn Ihre echte Domain für Shop 2 www.meinshop2.de lautet, dann speichern Sie als www.meinshop2.de_config.php<br>
@@ -160,8 +160,8 @@ Nach demselben Prinzip könnten Sie natürlich auch noch weitere Shops einbinden
   Dabei werden keine bestehende Datei überschrieben.</p>
 <p>4)<br>
   Im Ordner GEAENDERTE DATEIEN alle Ordner namens DEINTEMPLATE1 auf das in Ihrem Shop   verwendete Template umbenennen, das Sie für Shop 1 verwenden wollen (z.B. viennaorange).    Die Ordner namens DEINTEMPLATE2 auf das in Ihrem Shop verwendete Template umbenennen, das Sie für Shop 2 verwenden wollen (z.B. viennabright). Den Ordner DEINADMIN auf den Namen Ihres admin Verzeichnisses   umbenennen.<br>
-  Wenn Sie Zen Cart 1.5.3 gerade frisch installiert haben und noch   keinerlei Änderungen an den Dateien vorgenommen haben, können Sie nun  alle Dateien/Ordner aus dem Ordner GEAENDERTE DATEIEN in der   vorgegebenen Struktur in die Zen Cart Installation hochladen. Dabei   werden dann etliche Dateien überschrieben.<br>
-  Wenn Sie Zen Cart 1.5.3 schon länger im Einsatz haben und schon einmal   Änderungen an Dateien vorgenommen oder andere Module eingebaut haben,   dann laden Sie die Dateien keinesfalls einfach hoch. <br>
+  Wenn Sie Zen Cart 1.5.5 gerade frisch installiert haben und noch   keinerlei Änderungen an den Dateien vorgenommen haben, können Sie nun  alle Dateien/Ordner aus dem Ordner GEAENDERTE DATEIEN in der   vorgegebenen Struktur in die Zen Cart Installation hochladen. Dabei   werden dann etliche Dateien überschrieben.<br>
+  Wenn Sie Zen Cart 1.5.5 schon länger im Einsatz haben und schon einmal   Änderungen an Dateien vorgenommen oder andere Module eingebaut haben,   dann laden Sie die Dateien keinesfalls einfach hoch. <br>
   Vergleichen Sie alle Dateien im Ordner GEAENDERTE DATEIEN mit den   entsprechenden Dateien in Ihrem Shop und nehmen Sie die Änderungen   manuell per WinMerge oder BeyondCompare vor.<br>
   Dann spielen Sie die geänderten Dateien in der gezeigten Struktur ein.<br>
   Vermutlich haben Sie in Ihrer Shopinstallation im Ordner includes/init_includes/overrides noch keine Dateien liegen. Vergleichen Sie diese Dateien mit den Originaldateien in Ihrem includes/init_includes Verzeichnis und spilene Sie die geänderten dann nach includes/init_includes/overrides.

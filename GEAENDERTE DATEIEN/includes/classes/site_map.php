@@ -3,10 +3,10 @@
  * site_map.php
  *
  * @package general
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: site_map.php for Multisite 1.2 2014-08-08 10:56:45Z webchills $
+ * @version $Id: site_map.php for Multisite 1.3 2016-03-12 22:56:45Z webchills $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');
@@ -33,7 +33,7 @@ if (!defined('IS_ADMIN_FLAG')) {
        $spacer_string = '',
        $spacer_multiplier = 1;
 
-   function zen_SiteMapTree($load_from_database = true) {
+   function __construct($load_from_database = true) {
      global $languages_id, $db;
   $this->data = array();
  $categories_query = "select c.categories_id, cd.categories_name, c.parent_id
@@ -95,4 +95,3 @@ if (!defined('IS_ADMIN_FLAG')) {
      return $this->buildBranch($this->root_category_id);
    }
  }
-?>

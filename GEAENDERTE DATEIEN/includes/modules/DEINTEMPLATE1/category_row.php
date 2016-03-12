@@ -6,10 +6,10 @@
  * Once the data is prepared, it calls the standard tpl_list_box_content template for display.
  *
  * @package page
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: category_row.php for Multisite 1.2 2014-08-08 10:59:36Z webchills $
+ * @version $Id: category_row.php for Multisite 1.3 2016-03-12 22:59:36Z webchills $
  */
 if (!defined('IS_ADMIN_FLAG')) {
   die('Illegal Access');

@@ -6,10 +6,10 @@
  * Displays options fields upon which a product search will be run
  *
  * @package templateSystem
- * @copyright Copyright 2003-2014 Zen Cart Development Team
+ * @copyright Copyright 2003-2016 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce
  * @license http://www.zen-cart-pro.at/license/2_0.txt GNU Public License V2.0
- * @version $Id: tpl_advanced_search_default.php for Multisite 1.2 2014-08-08 11:24:19Z webchills $
+ * @version $Id: tpl_advanced_search_default.php for Multisite 1.3 2016-03-12 22:24:19Z webchills $
  */
 ?>
 <div class="centerColumn" id="advSearchDefault">
